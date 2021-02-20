@@ -15,7 +15,7 @@ function App() {
             <div className="item"></div>
         </div>
         <button onClick={(event) => {
-            utility.read_tweets()
+            console.log(utility.pipeline())
         }}>GO</button>
         </>
     )
