@@ -1,17 +1,22 @@
+import {common_words} from "./common_words";
+
 export const utility = {
     pipeline : function() {
         var tweets = utility.read_tweets()
-        var tweets_clean = utility.remove_stopwords(tweets)
-        var tweets_clean_lower = utility.lowercase(tweets_clean)
-        var tweets_clean_lower_clean = utility.remove_mentions_from_tweet(tweets_clean_lower)
+        var tweets_lower = utility.lowercase(tweets)
+        var tweets_clean_lower_clean = utility.remove_mentions_from_tweet(tweets_lower)
         var tweets_clean_lower_clean_nonum = utility.strip_from_existing(tweets_clean_lower_clean)
-        var tweets_clean_lower_clean_nonum_trimmed = utility.trim(tweets_clean_lower_clean_nonum)
+        var tweets_clean_lower_clean_nonum_nostop = utility.remove_stopwords(tweets_clean_lower_clean_nonum)
+        var tweets_clean_lower_clean_nonum_trimmed = utility.trim(tweets_clean_lower_clean_nonum_nostop)
         var tweets_clean_lower_clean_nonum_trimmed_deduped = utility.dedupe_within_tweet(tweets_clean_lower_clean_nonum_trimmed)
         var tweets_clean_lower_clean_nonum_trimmed_less = utility.remove_blanks(tweets_clean_lower_clean_nonum_trimmed_deduped)
 
         var topics = utility.find_topics(tweets_clean_lower_clean_nonum_trimmed_less)
 
-        var fin = utility.text_distances(topics, tweets)
+        var topics_counts = utility.count_occurences(topics)
+        var topics_counts_sorted = utility.sort_object_by_value(topics_counts)
+
+        //var fin = utility.text_distances(topics, tweets)
 
 
 
@@ -20,7 +25,7 @@ export const utility = {
         //var topics_occurences_sorted = utility.sort_object_by_value(topics_occurences)
 
 
-        console.log(fin)
+        console.log(topics_counts_sorted)
     },
     read_tweets: function() {
         var cleaned_tweets = []
@@ -35,8 +40,8 @@ export const utility = {
             var temp = []
             var words = str.split(' ')
             for (var i = 0; i < words.length; i++) {
-                var word_clean = words[i].split(".").join("")
-                if (!stopwords.includes(word_clean)) {
+                var word_clean = words[i].split(".").join("").trim()
+                if (!stopwords.includes(word_clean) && !common_words.includes(word_clean) && word_clean !== "") {
                     temp.push(word_clean)
                 }
             }
@@ -80,6 +85,7 @@ export const utility = {
                 .split(";").join("")
                 .split(":").join("")
                 .split(",").join("")
+                .split("’").join("'")
                 .split("1").join("")
                 .split("2").join("")
                 .split("3").join("")
@@ -121,16 +127,22 @@ export const utility = {
         })
         return(raw_topics)
     },
-    count_occurences : function(arr) {
+    count_occurences : function(topics_arr) {
+        var individual_words = []
+        topics_arr.forEach(function(arr) {
+            arr.forEach(function(word) {
+                individual_words.push(word)
+            })
+        })
         var counts = {};
-        for (var i = 0; i < arr.length; i++) {
-            var num = arr[i];
+        for (var i = 0; i < individual_words.length; i++) {
+            var num = individual_words[i];
             counts[num] = counts[num] ? counts[num] + 1 : 1;
         }
         return(counts)
     },
     sort_object_by_value : function(obj) {
-        return(Object.entries(obj).sort(([,a],[,b]) => a-b))
+        return(Object.entries(obj).sort(([,a],[,b]) => b-a))
     },
     dedupe_within_tweet: function(arr) {
         var res = []
@@ -193,19 +205,7 @@ export const utility = {
         var termFreqVecB = utility.termFreqMapToVector(termFreqB, dict);
         return utility.cosineSimilarity(termFreqVecA, termFreqVecB);
     },
-    text_distances :  function(topics, original_tweets) {
-        var res = []
-        original_tweets.forEach(function(tweet) {
-            topics.forEach(function(topics_arr) {
-                var topic_str = topics_arr.join(" ")
-                var dist = utility.textCosineSimilarity(topic_str, tweet)
-                var inner = {}
-                inner["topic"] = topic_str;
-                inner["original_tweet"] = tweet;
-                inner["cosine_distance"] = dist;
-                res.push(inner)
-            })
-        })
-        return(res)
+    text_distances :  function(topics_arr) {
+        //
     }
 }
