@@ -13,16 +13,21 @@ export const utility = {
 
         var topics = utility.find_topics(tweets_clean_lower_clean_nonum_trimmed_less)
 
+       
+
         var topics_counts = utility.count_occurences(topics)
         var topics_counts_sorted = utility.sort_object_by_value(topics_counts)
 
-        var topics_counts_sorted_sliced = topics_counts_sorted.slice(1,10)
+    
+        var topics_counts_sorted_sliced = topics_counts_sorted.slice(0,100)
+
+        var list = utility.list_tweets_by_topic(tweets, topics_counts_sorted_sliced) // pass off to listing
+        console.log(list)
 
         var fin = utility.prepare_for_plotly(topics_counts_sorted_sliced)
 
+        return(fin)
 
-
-        console.log(fin)
     },
     read_tweets: function() {
         var cleaned_tweets = []
@@ -167,5 +172,19 @@ export const utility = {
        res["y"] = y_values
        res["type"] = "bar"  
     return(res)
+    },
+    list_tweets_by_topic : function(tweets, topics_counts_sorted_sliced) {
+        var res = {};
+        var lowercased_tweets = utility.lowercase(tweets)
+        lowercased_tweets.forEach(function(raw_tweet) {
+
+                topics_counts_sorted_sliced.forEach(function(topic) {
+                                console.log(topic[0])
+                    if(raw_tweet.includes(topic[0])) {
+                        res[topic] = raw_tweet
+                    }
+                })
+            })
+        return(res)
     }
 }

@@ -16,7 +16,6 @@ function App() {
             </div>
             <div className="item"></div>
         </div>
-        
         <Chart/>
         </>
     )
