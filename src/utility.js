@@ -2,6 +2,7 @@ import {common_words} from "./common_words";
 
 export const utility = {
     pipeline : function() {
+        var res = {}
         var tweets = utility.read_tweets()
         var tweets_lower = utility.lowercase(tweets)
         var tweets_clean_lower_clean = utility.remove_mentions_from_tweet(tweets_lower)
@@ -19,14 +20,13 @@ export const utility = {
         var topics_counts_sorted = utility.sort_object_by_value(topics_counts)
 
     
-        var topics_counts_sorted_sliced = topics_counts_sorted.slice(0,100)
+        var topics_counts_sorted_sliced = topics_counts_sorted.slice(0,16)
 
-        var list = utility.list_tweets_by_topic(tweets, topics_counts_sorted_sliced) // pass off to listing
-        console.log(list)
+        res["list_data"] = utility.list_tweets_by_topic(tweets, topics_counts_sorted_sliced) // pass off to listing
 
-        var fin = utility.prepare_for_plotly(topics_counts_sorted_sliced)
+        res["plot_data"] = utility.prepare_for_plotly(topics_counts_sorted_sliced)
 
-        return(fin)
+        return(res)
 
     },
     read_tweets: function() {
@@ -177,11 +177,13 @@ export const utility = {
         var res = {};
         var lowercased_tweets = utility.lowercase(tweets)
         lowercased_tweets.forEach(function(raw_tweet) {
-
                 topics_counts_sorted_sliced.forEach(function(topic) {
-                                console.log(topic[0])
                     if(raw_tweet.includes(topic[0])) {
-                        res[topic] = raw_tweet
+                        if(typeof(res[topic[0]]) === "undefined") {
+                            res[topic[0]] = []
+                        } else {
+                            res[topic[0]].push(raw_tweet)
+                        }
                     }
                 })
             })

@@ -2,6 +2,7 @@ import "./App.css";
 import { utility } from "./utility";
 
 import Chart from "./Chart";
+import Listing from "./Listing";
 
 function App() {
     return(
@@ -17,6 +18,7 @@ function App() {
             <div className="item"></div>
         </div>
         <Chart/>
+        <Listing/>
         </>
     )
 }
