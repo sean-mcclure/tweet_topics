@@ -1,7 +1,8 @@
-import {common_words} from "./common_words";
-
+import {
+    common_words
+} from "./common_words";
 export const utility = {
-    pipeline : function() {
+    pipeline: function() {
         var res = {}
         var tweets = utility.read_tweets()
         var tweets_lower = utility.lowercase(tweets)
@@ -11,29 +12,19 @@ export const utility = {
         var tweets_clean_lower_clean_nonum_trimmed = utility.trim(tweets_clean_lower_clean_nonum_nostop)
         var tweets_clean_lower_clean_nonum_trimmed_deduped = utility.dedupe_within_tweet(tweets_clean_lower_clean_nonum_trimmed)
         var tweets_clean_lower_clean_nonum_trimmed_less = utility.remove_blanks(tweets_clean_lower_clean_nonum_trimmed_deduped)
-
         var topics = utility.find_topics(tweets_clean_lower_clean_nonum_trimmed_less)
-
-       
-
         var topics_counts = utility.count_occurences(topics)
         var topics_counts_sorted = utility.sort_object_by_value(topics_counts)
-
-    
-        var topics_counts_sorted_sliced = topics_counts_sorted.slice(0,16)
-
+        var topics_counts_sorted_sliced = topics_counts_sorted.slice(0, 16)
         res["list_data"] = utility.list_tweets_by_topic(tweets, topics_counts_sorted_sliced) // pass off to listing
-
         res["plot_data"] = utility.prepare_for_plotly(topics_counts_sorted_sliced)
-
-        return(res)
-
+        return (res)
     },
     read_tweets: function() {
         var cleaned_tweets = []
         var tweets = document.getElementById("textarea").value;
         tweets = tweets.split("\n");
-        return(tweets)
+        return (tweets)
     },
     remove_stopwords: function(arr) {
         var stopwords = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', 'her', 'hers', 'herself', 'it', 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', 'should', 'now']
@@ -48,88 +39,67 @@ export const utility = {
                 }
             }
             res.push(temp.join(" "))
-            })
+        })
         return (res)
     },
-    lowercase : function(arr) {
+    lowercase: function(arr) {
         var res = [];
         arr.forEach(function(elem) {
             res.push(elem.toLowerCase())
         })
-        return(res)
+        return (res)
     },
     remove_mentions_from_tweet: function(arr) {
         var res = []
         arr.forEach(function(tweet) {
             var temp = []
             tweet.split(" ").forEach(function(word) {
-                if(!word.includes("@")) {
+                if (!word.includes("@")) {
                     temp.push(word)
                 }
             })
             var pieced_back_togeter = temp.join(" ")
             res.push(pieced_back_togeter)
         })
-        return(res)
+        return (res)
     },
-    strip_from_existing : function(arr) {
+    strip_from_existing: function(arr) {
         var res = [];
         arr.forEach(function(elem) {
-            res.push(elem.split("“").join("")
-                .split("/").join(" ")
-                .split("_").join("")
-                .split('"').join("")
-                .split("*").join("")
-                .split("(").join("")
-                .split(")").join("")
-                .split("#").join("")
-                .split("?").join("")
-                .split(";").join("")
-                .split(":").join("")
-                .split(",").join("")
-                .split("’").join("'")
-                .split("1").join("")
-                .split("2").join("")
-                .split("3").join("")
-                .split("4").join("")
-                .split("5").join("")
-                .split("6").join("")
-                .split("7").join("")
-                .split("8").join("")
-                .split("9").join("")
-                .split("0").join("")
-                )
+            res.push(elem.split("“").join("").split("/").join(" ").split("_").join("").split('"').join("").split("*").join("").split("(").join("").split(")").join("").split("#").join("").split("?").join("").split(";").join("").split(":").join("").split(",").join("").split("’").join("'").split("1").join("").split("2").join("").split("3").join("").split("4").join("").split("5").join("").split("6").join("").split("7").join("").split("8").join("").split("9").join("").split("0").join(""))
         })
-        return(res)
+        return (res)
     },
-    trim : function(arr) {
+    trim: function(arr) {
         var res = []
         arr.forEach(function(elem) {
             res.push(elem.trim())
         })
-        return(res)
+        return (res)
     },
-    remove_blanks :  function(arr) {
+    remove_blanks: function(arr) {
         var res = []
         arr.forEach(function(elem) {
-            if(elem !== "") {
+            if (elem !== "") {
                 res.push(elem)
             }
         })
-        return(res)
+        return (res)
     },
     find_longest_word: function(str) {
-        var longest = str.split(" ").sort(function(a, b) {return b.length - a.length}).slice(0,3)
+        var longest = str.split(" ").sort(function(a, b) {
+            return b.length - a.length
+        }).slice(0, 3)
         return (longest)
     },
-    find_topics : function(arr) {
+    find_topics: function(arr) {
         var raw_topics = [];
         arr.forEach(function(str) {
             raw_topics.push(utility.find_longest_word(str));
         })
-        return(raw_topics)
+        return (raw_topics)
     },
-    count_occurences : function(topics_arr) {
+    count_occurences: function(topics_arr) {
         var individual_words = []
         topics_arr.forEach(function(arr) {
             arr.forEach(function(word) {
@@ -141,51 +111,66 @@ export const utility = {
             var num = individual_words[i];
             counts[num] = counts[num] ? counts[num] + 1 : 1;
         }
-        return(counts)
+        return (counts)
     },
-    sort_object_by_value : function(obj) {
-        return(Object.entries(obj).sort(([,a],[,b]) => b-a))
+    sort_object_by_value: function(obj) {
+        return (Object.entries(obj).sort(([, a], [, b]) => b - a))
     },
     dedupe_within_tweet: function(arr) {
         var res = []
         arr.forEach(function(tweet) {
             var temp = []
             tweet.split(" ").forEach(function(word) {
-                if(!temp.includes(word)) {
+                if (!temp.includes(word)) {
                     temp.push(word)
                 }
             })
             var pieced_back_togeter = temp.join(" ")
             res.push(pieced_back_togeter)
         })
-        return(res)
+        return (res)
     },
-    prepare_for_plotly : function(data) {
+    prepare_for_plotly: function(data) {
         var res = {}
         var x_values = []
         var y_values = []
-       data.forEach(function(arr) {
-          x_values.push(arr[0])
-          y_values.push(arr[1])
-       })
-       res["x"] = x_values
-       res["y"] = y_values
-       res["type"] = "bar"  
-    return(res)
+        data.forEach(function(arr) {
+            x_values.push(arr[0])
+            y_values.push(arr[1])
+        })
+        res["x"] = x_values
+        res["y"] = y_values
+        res["type"] = "bar"
+        return (res)
     },
-    list_tweets_by_topic : function(tweets, topics_counts_sorted_sliced) {
+    list_tweets_by_topic: function(tweets, topics_counts_sorted_sliced) {
         var res = {};
         tweets.forEach(function(tweet) {
-                topics_counts_sorted_sliced.forEach(function(topic) {
-                    if(tweet.toLowerCase().includes(topic[0])) {
-                        if(typeof(res[topic[0]]) === "undefined") {
-                            res[topic[0]] = []
-                        } else {
-                            res[topic[0]].push(tweet)
-                        }
+            topics_counts_sorted_sliced.forEach(function(topic) {
+                if (tweet.toLowerCase().includes(topic[0])) {
+                    if (typeof(res[topic[0]]) === "undefined") {
+                        res[topic[0]] = []
+                    } else {
+                        res[topic[0]].push(tweet)
                     }
-                })
+                }
             })
-        return(res)
-    }
+        })
+        return (res)
+    },
+    hold_value : {},
+    call_once_satisfied: function(props) {
+        if (props['condition'] === true) {
+            if (typeof(props.function) === 'function') {
+                props.function()
+            } else {
+                props.function()
+            }
+        } else {
+            console.log("...")
+            setTimeout(function() {
+                utility.call_once_satisfied(props)
+            }, 100)
+        }
+    },
 }

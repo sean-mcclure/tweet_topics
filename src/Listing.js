@@ -8,19 +8,28 @@ function Listing() {
     
     const [use_data, setData] = useState();
 
-    const handleClick = () => {
-        var list_data = utility.pipeline()["list_data"]["complexity"] // comes in as array
-        var formatted = list_data.map(function(line) { // map the array to individual p tags
-            return (<p>{line}</p>);
-        });
-        setTimeout(function() {
-            setData((use_data) => [use_data, formatted]); // pass the formatted data into setData
-        }, 2000)
+    const handleClick = (e) => {
+        const list_data = utility.pipeline()["list_data"] // comes in as array
+            Object.keys(list_data).forEach(function(elem) {
+                var butt = document.createElement("button");
+                butt.innerText = elem;
+                butt.id = Math.round(Math.random()*10000000000)
+                butt.style.margin = "5px";
+                butt.style.outline = "0";
+                butt.style.width = "auto";
+                butt.addEventListener("click", function(e) {
+                    var formatted = list_data[document.getElementById(e.target.id).innerText].map(function(line) { // map the array to individual p tags
+                        return (<p>{line}</p>);
+                    });
+                    setData((use_data) => [use_data, formatted]);
+                })
+                document.body.append(butt)
+            })
     };   
 
     return(
         <>
-        <button onClick={handleClick}>GO</button>
+        <button id="button" onClick={handleClick}>GO</button>
         <div>{use_data}</div>
         </>
     )
