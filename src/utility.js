@@ -16,16 +16,13 @@ export const utility = {
         var topics_counts = utility.count_occurences(topics)
         var topics_counts_sorted = utility.sort_object_by_value(topics_counts)
 
-        //var fin = utility.text_distances(topics, tweets)
+        var topics_counts_sorted_sliced = topics_counts_sorted.slice(1,10)
+
+        var fin = utility.prepare_for_plotly(topics_counts_sorted_sliced)
 
 
 
-
-        //var topics_occurences = utility.count_occurences(topics)
-        //var topics_occurences_sorted = utility.sort_object_by_value(topics_occurences)
-
-
-        console.log(topics_counts_sorted)
+        console.log(fin)
     },
     read_tweets: function() {
         var cleaned_tweets = []
@@ -158,54 +155,17 @@ export const utility = {
         })
         return(res)
     },
-    termFreqMap : function(str) {
-        var words = str.split(' ');
-        var termFreq = {};
-        words.forEach(function(w) {
-            termFreq[w] = (termFreq[w] || 0) + 1;
-        });
-        return termFreq;
-    },
-    addKeysToDict : function(map, dict) {
-        for (var key in map) {
-            dict[key] = true;
-        }
-    },
-    termFreqMapToVector : function (map, dict) {
-        var termFreqVector = [];
-        for (var term in dict) {
-            termFreqVector.push(map[term] || 0);
-        }
-        return termFreqVector;
-    },
-    vecDotProduct : function (vecA, vecB) {
-        var product = 0;
-        for (var i = 0; i < vecA.length; i++) {
-            product += vecA[i] * vecB[i];
-        }
-        return product;
-    },
-    vecMagnitude : function(vec) {
-        var sum = 0;
-        for (var i = 0; i < vec.length; i++) {
-            sum += vec[i] * vec[i];
-        }
-        return Math.sqrt(sum);
-    },
-    cosineSimilarity : function (vecA, vecB) {
-        return utility.vecDotProduct(vecA, vecB) / (utility.vecMagnitude(vecA) * utility.vecMagnitude(vecB));
-    },
-    textCosineSimilarity : function (strA, strB) {
-        var termFreqA = utility.termFreqMap(strA);
-        var termFreqB = utility.termFreqMap(strB);
-        var dict = {};
-        utility.addKeysToDict(termFreqA, dict);
-        utility.addKeysToDict(termFreqB, dict);
-        var termFreqVecA = utility.termFreqMapToVector(termFreqA, dict);
-        var termFreqVecB = utility.termFreqMapToVector(termFreqB, dict);
-        return utility.cosineSimilarity(termFreqVecA, termFreqVecB);
-    },
-    text_distances :  function(topics_arr) {
-        //
+    prepare_for_plotly : function(data) {
+        var res = {}
+        var x_values = []
+        var y_values = []
+       data.forEach(function(arr) {
+          x_values.push(arr[0])
+          y_values.push(arr[1])
+       })
+       res["x"] = x_values
+       res["y"] = y_values
+       res["type"] = "bar"  
+    return(res)
     }
 }

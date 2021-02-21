@@ -1,6 +1,8 @@
 import "./App.css";
 import { utility } from "./utility";
 
+import Chart from "./Chart";
+
 function App() {
     return(
         <>
@@ -14,9 +16,8 @@ function App() {
             </div>
             <div className="item"></div>
         </div>
-        <button onClick={(event) => {
-            console.log(utility.pipeline())
-        }}>GO</button>
+        
+        <Chart/>
         </>
     )
 }
