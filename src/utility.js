@@ -13,6 +13,7 @@ export const utility = {
         var tweets_clean_lower_clean_nonum_trimmed_deduped = utility.dedupe_within_tweet(tweets_clean_lower_clean_nonum_trimmed)
         var tweets_clean_lower_clean_nonum_trimmed_less = utility.remove_blanks(tweets_clean_lower_clean_nonum_trimmed_deduped)
         var topics = utility.find_topics(tweets_clean_lower_clean_nonum_trimmed_less)
+        console.log(topics)
         var topics_counts = utility.count_occurences(topics)
         var topics_counts_sorted = utility.sort_object_by_value(topics_counts)
         var topics_counts_sorted_sliced = topics_counts_sorted.slice(0, 16)
@@ -158,8 +159,53 @@ export const utility = {
         })
         return (res)
     },
-    highlight_words : function(word) {
+    highlight_words: function(word) {
         const page = document.body.innerHTML;
         document.body.innerHTML = page.replace(new RegExp(word, "gi"), (match) => `<mark>${match}</mark>`);
+    },
+    build_vocabulary : function() {
+// build this from all words in topics ["","",""]
+    },
+    dtm : function(arr_of_tweets) {
+        arr_of_tweets.forEach(function(tweet) {
+            var inner = {}
+            inner.tweet = tweet
+            inner.
+        })
+    },
+    kmeans: function() {
+        var data = [{
+            'company': 'Microsoft',
+            'size': 91259,
+            'revenue': 60420
+        }, {
+            'company': 'IBM',
+            'size': 400000,
+            'revenue': 98787
+        }, {
+            'company': 'Skype',
+            'size': 700,
+            'revenue': 716
+        }, {
+            'company': 'SAP',
+            'size': 48000,
+            'revenue': 11567
+        }, {
+            'company': 'Yahoo!',
+            'size': 14000,
+            'revenue': 6426
+        }, {
+            'company': 'eBay',
+            'size': 15000,
+            'revenue': 8700
+        }, ];
+        var labels = new Array;
+        var vectors = new Array;
+        for (var i = 0; i < data.length; i++) {
+            labels[i] = data[i]['company'];
+            vectors[i] = [data[i]['size'], data[i]['revenue']];
+        }
+        var clusters = figue.kmeans(4, vectors);
+        console.log(clusters)
     }
 }
