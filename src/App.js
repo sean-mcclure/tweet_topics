@@ -9,16 +9,16 @@ function App() {
         <>
         <div className="title">PASTE TWEETS</div>
         <div className="wrapper">
-            <div className="item"></div>
             <div className="item">
-                <div></div>
                 <textarea id="textarea"></textarea>
-                <div></div>
             </div>
-            <div className="item"></div>
+            <div className="item">
+                <Listing/>
+            </div>
+            <div className="item">
+                <Chart/>
+            </div>
         </div>
-        <Chart/>
-        <Listing/>
         </>
     )
 }

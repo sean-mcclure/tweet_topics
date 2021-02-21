@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import Highlighter from "react-highlight-words";
 
 import "./Listing.css";
 
@@ -18,10 +19,14 @@ function Listing() {
                 butt.style.outline = "0";
                 butt.style.width = "auto";
                 butt.addEventListener("click", function(e) {
-                    var formatted = list_data[document.getElementById(e.target.id).innerText].map(function(line) { // map the array to individual p tags
-                        return (<p>{line}</p>);
+                    var button_title = document.getElementById(e.target.id).innerText;
+                    var formatted = list_data[button_title].map(function(line) { // map the array to individual p tags
+                        return (<div className="show_tweet">{line}</div>);
                     });
                     setData((use_data) => [use_data, formatted]);
+                    setTimeout(function() {
+                        utility.highlight_words(button_title)
+                    }, 1000)
                 })
                 document.body.append(butt)
             })

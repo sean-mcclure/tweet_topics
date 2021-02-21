@@ -158,19 +158,8 @@ export const utility = {
         })
         return (res)
     },
-    hold_value : {},
-    call_once_satisfied: function(props) {
-        if (props['condition'] === true) {
-            if (typeof(props.function) === 'function') {
-                props.function()
-            } else {
-                props.function()
-            }
-        } else {
-            console.log("...")
-            setTimeout(function() {
-                utility.call_once_satisfied(props)
-            }, 100)
-        }
-    },
+    highlight_words : function(word) {
+        const page = document.body.innerHTML;
+        document.body.innerHTML = page.replace(new RegExp(word, "gi"), (match) => `<mark>${match}</mark>`);
+    }
 }
