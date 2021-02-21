@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Plot from 'react-plotly.js';
 
 import {utility} from "./utility";
@@ -9,8 +9,14 @@ function Chart(props) {
 
     const handleClick = () => {
         var plot_data = utility.pipeline()["plot_data"]
-        setData((use_data) => [use_data, plot_data]);
+        setTimeout(function() {
+            setData((use_data) => [use_data, plot_data]);
+        }, 2000)
     };
+
+    useEffect(() => {
+        console.log("...")
+    })
 
     return (
         <>

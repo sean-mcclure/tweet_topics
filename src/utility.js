@@ -175,14 +175,13 @@ export const utility = {
     },
     list_tweets_by_topic : function(tweets, topics_counts_sorted_sliced) {
         var res = {};
-        var lowercased_tweets = utility.lowercase(tweets)
-        lowercased_tweets.forEach(function(raw_tweet) {
+        tweets.forEach(function(tweet) {
                 topics_counts_sorted_sliced.forEach(function(topic) {
-                    if(raw_tweet.includes(topic[0])) {
+                    if(tweet.toLowerCase().includes(topic[0])) {
                         if(typeof(res[topic[0]]) === "undefined") {
                             res[topic[0]] = []
                         } else {
-                            res[topic[0]].push(raw_tweet)
+                            res[topic[0]].push(tweet)
                         }
                     }
                 })

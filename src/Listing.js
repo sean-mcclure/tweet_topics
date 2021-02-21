@@ -9,21 +9,20 @@ function Listing() {
     const [use_data, setData] = useState();
 
     const handleClick = () => {
-        var list_data = utility.pipeline()["list_data"]
-        setData((use_data) => [use_data, list_data]);
-    };
+        var list_data = utility.pipeline()["list_data"]["complexity"] // comes in as array
+        var formatted = list_data.map(function(line) { // map the array to individual p tags
+            return (<p>{line}</p>);
+        });
+        setTimeout(function() {
+            setData((use_data) => [use_data, formatted]); // pass the formatted data into setData
+        }, 2000)
+    };   
 
     return(
-        <div className="wrapper">
-            <div className="item">
-                <button onClick={handleClick}>GO</button>
-            </div>
-            <div className="item">
-                {use_data}.map(function() {
-                    document.body.append(Element)
-                });
-            </div>
-        </div>
+        <>
+        <button onClick={handleClick}>GO</button>
+        <div>{use_data}</div>
+        </>
     )
 }
 
