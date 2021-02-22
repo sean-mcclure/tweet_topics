@@ -1,6 +1,7 @@
 import {common_words} from "./common_words";
 
 import {figue} from "./libs/figue.js";
+//import {thes} from "./data/thes.js";
 
 export const utility = {
     pipeline: function() {
@@ -14,14 +15,30 @@ export const utility = {
         var tweets_clean_lower_clean_nonum_trimmed_deduped = utility.dedupe_within_tweet(tweets_clean_lower_clean_nonum_trimmed)
         var tweets_clean_lower_clean_nonum_trimmed_less = utility.remove_blanks(tweets_clean_lower_clean_nonum_trimmed_deduped)
         var topics = utility.find_topics(tweets_clean_lower_clean_nonum_trimmed_less)
+
+        console.log(topics)
+
         var topics_counts = utility.count_occurences(topics)
         var topics_counts_sorted = utility.sort_object_by_value(topics_counts)
         var topics_counts_sorted_sliced = topics_counts_sorted.slice(0, 16)
         res["list_data"] = utility.list_tweets_by_topic(tweets, topics_counts_sorted_sliced) // pass off to listing
         res["plot_data"] = utility.prepare_for_plotly(topics_counts_sorted_sliced)
 
-        var dtm = utility.dtm(tweets, tweets_clean_lower_clean_nonum_trimmed_less, utility.build_vocabulary(topics))
-        console.log(dtm)
+        var synms = utility.add_synonyms_to_tweets(tweets, tweets_clean_lower_clean_nonum_trimmed_less, topics)
+        console.log(synms)
+
+        /*
+
+        var data = utility.dtm(tweets, tweets_clean_lower_clean_nonum_trimmed_less, utility.build_vocabulary(topics))
+        var kmean_results = utility.kmeans(data, 40)
+        var cluster_results = utility.show_tweets_per_cluster(kmean_results, 0)
+        console.log(cluster_results)
+        cluster_results.forEach(function(obj) {
+             document.getElementsByClassName("item")[1].innerHTML += "<div class='show_tweet'>" + obj.label.toString() + "</div>"
+        })
+        */
+
+       
 
         return (res)
     },
@@ -104,6 +121,9 @@ export const utility = {
         })
         return (raw_topics)
     },
+    map_topics_to_original_tweets : function() {
+
+    },
     count_occurences: function(topics_arr) {
         var individual_words = []
         topics_arr.forEach(function(arr) {
@@ -176,58 +196,65 @@ export const utility = {
         })
         return(vocab)
     },
-    dtm : function(original_tweets, cleaned_tweets, vocab) {
-        var data = []
+    find_synonyms : function(word) {
+        /*
+        var res;
+        var use_thes = JSON.parse({thes});
+        use_thes.forEach(function(obj) {
+            if(obj.word === word) {
+                res = obj
+            }
+        })
+        return(res)
+        */
+    },
+    add_synonyms_to_tweets : function(original_tweets, cleaned_tweets, topics) {
+        var res = []
         cleaned_tweets.forEach(function(clean_tweet, i) {
             var inner = {};
             inner["original_tweet"] = original_tweets[i];
             inner["cleaned_tweet"] = clean_tweet;
-            vocab.forEach(function(word) {
-                if(clean_tweet.includes(word)) {
-                    inner[word] = 1
-                } else {
-                    inner[word] = 0
-                }   
-            })
-            data.push(inner)
+            topics.forEach(function(topic_obj) {
+                var inner_syn = []
+                topic_obj.forEach(function(topic_word) {
+                    var synonyms = utility.find_synonyms(topic_word)
+                    inner_syn.push(synonyms)
+                })
+                inner["synonyms"] = inner_syn
+            res.push(inner)
         })
-        return(data)
+    })
+        return(res)
     },
-    kmeans: function() {
-        var data = [{
-            'company': 'Microsoft',
-            'size': 91259,
-            'revenue': 60420
-        }, {
-            'company': 'IBM',
-            'size': 400000,
-            'revenue': 98787
-        }, {
-            'company': 'Skype',
-            'size': 700,
-            'revenue': 716
-        }, {
-            'company': 'SAP',
-            'size': 48000,
-            'revenue': 11567
-        }, {
-            'company': 'Yahoo!',
-            'size': 14000,
-            'revenue': 6426
-        }, {
-            'company': 'eBay',
-            'size': 15000,
-            'revenue': 8700
-        }, ];
+    fetch_vector : function(dtm, index) {
+        var props_only = Object.fromEntries(Object.entries(dtm[index]).filter(([key, value]) => key !== "original_tweet" && key !== "cleaned_tweet") )
+        var res = Object.values(props_only)
+        return(res)
+    },
+    kmeans: function(data, k) {
         var labels = new Array;
         var vectors = new Array;
         for (var i = 0; i < data.length; i++) {
-            labels[i] = data[i]['company'];
-            vectors[i] = [data[i]['size'], data[i]['revenue']];
+            labels[i] = data[i]['original_tweet'];
+            vectors[i] = utility.fetch_vector(data, i)
         }
-        if(typeof(figue) !== "undefined") {
-        var clusters = figue.kmeans(4, vectors);
+        var clusters = figue.kmeans(k, vectors);
+        var kmeans_results = []
+        for (var i = 0 ; i < vectors.length ; i++) {
+            var inner = {}
+            inner["label"] = labels[i]
+            inner["cluster"]= clusters.assignments[i]
+            kmeans_results.push(inner)
         }
-        console.log(clusters)
+        return(kmeans_results)
+    },
+    show_tweets_per_cluster : function(kmeans_results, cluster_number) {
+        var res = [];
+        kmeans_results.forEach(function(obj) {
+            if(obj.cluster === cluster_number) {
+                res.push(obj)
+            }
+        })
+        return(res)
     }
 }
