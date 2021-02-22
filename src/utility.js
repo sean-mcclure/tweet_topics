@@ -1,6 +1,7 @@
-import {
-    common_words
-} from "./common_words";
+import {common_words} from "./common_words";
+
+import {figue} from "./libs/figue.js";
+
 export const utility = {
     pipeline: function() {
         var res = {}
@@ -13,12 +14,15 @@ export const utility = {
         var tweets_clean_lower_clean_nonum_trimmed_deduped = utility.dedupe_within_tweet(tweets_clean_lower_clean_nonum_trimmed)
         var tweets_clean_lower_clean_nonum_trimmed_less = utility.remove_blanks(tweets_clean_lower_clean_nonum_trimmed_deduped)
         var topics = utility.find_topics(tweets_clean_lower_clean_nonum_trimmed_less)
-        console.log(topics)
         var topics_counts = utility.count_occurences(topics)
         var topics_counts_sorted = utility.sort_object_by_value(topics_counts)
         var topics_counts_sorted_sliced = topics_counts_sorted.slice(0, 16)
         res["list_data"] = utility.list_tweets_by_topic(tweets, topics_counts_sorted_sliced) // pass off to listing
         res["plot_data"] = utility.prepare_for_plotly(topics_counts_sorted_sliced)
+
+        var dtm = utility.dtm(tweets, tweets_clean_lower_clean_nonum_trimmed_less, utility.build_vocabulary(topics))
+        console.log(dtm)
+
         return (res)
     },
     read_tweets: function() {
@@ -87,16 +91,16 @@ export const utility = {
         })
         return (res)
     },
-    find_longest_word: function(str) {
+    find_longest_word: function(str, num_words) {
         var longest = str.split(" ").sort(function(a, b) {
             return b.length - a.length
-        }).slice(0, 3)
+        }).slice(0, num_words)
         return (longest)
     },
     find_topics: function(arr) {
         var raw_topics = [];
         arr.forEach(function(str) {
-            raw_topics.push(utility.find_longest_word(str));
+            raw_topics.push(utility.find_longest_word(str, 3)); // can change number of words to include here
         })
         return (raw_topics)
     },
@@ -163,15 +167,31 @@ export const utility = {
         const page = document.body.innerHTML;
         document.body.innerHTML = page.replace(new RegExp(word, "gi"), (match) => `<mark>${match}</mark>`);
     },
-    build_vocabulary : function() {
-// build this from all words in topics ["","",""]
-    },
-    dtm : function(arr_of_tweets) {
-        arr_of_tweets.forEach(function(tweet) {
-            var inner = {}
-            inner.tweet = tweet
-            inner.
+    build_vocabulary : function(topics) {
+        var vocab = [];
+        topics.forEach(function(topic_arr) {
+            topic_arr.forEach(function(word) {
+                vocab.push(word);
+            })
         })
+        return(vocab)
+    },
+    dtm : function(original_tweets, cleaned_tweets, vocab) {
+        var data = []
+        cleaned_tweets.forEach(function(clean_tweet, i) {
+            var inner = {};
+            inner["original_tweet"] = original_tweets[i];
+            inner["cleaned_tweet"] = clean_tweet;
+            vocab.forEach(function(word) {
+                if(clean_tweet.includes(word)) {
+                    inner[word] = 1
+                } else {
+                    inner[word] = 0
+                }   
+            })
+            data.push(inner)
+        })
+        return(data)
     },
     kmeans: function() {
         var data = [{
@@ -205,7 +225,9 @@ export const utility = {
             labels[i] = data[i]['company'];
             vectors[i] = [data[i]['size'], data[i]['revenue']];
         }
+        if(typeof(figue) !== "undefined") {
         var clusters = figue.kmeans(4, vectors);
+        }
         console.log(clusters)
     }
 }

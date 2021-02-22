@@ -1,11 +1,11 @@
-/*!
+/*
  * Figue v1.0.1
  *
  * Copyright 2010, Jean-Yves Delort
  * Licensed under the MIT license.
  *
  */
-var figue = function() {
+export var figue = function() {
     function euclidianDistance(vec1, vec2) {
         var N = vec1.length;
         var d = 0;
@@ -135,7 +135,7 @@ var figue = function() {
                     shortest = left_dendo;
                 }
                 // repeat the first line containing the vertical bar
-                header = shortest[0];
+                var header = shortest[0];
                 var toadd = longest.length - shortest.length;
                 for (var i = 0; i < toadd; i++) {
                     shortest.splice(0, 0, header);
@@ -164,14 +164,14 @@ var figue = function() {
         var distMatrix = matrixObj.mtx;
         var clusters = new Array(N);
         var c1, c2, c1Cluster, c2Cluster, i, j, p, root, newCentroid;
-        if (distance == figue.EUCLIDIAN_DISTANCE) distance = euclidianDistance;
-        else if (distance == figue.MANHATTAN_DISTANCE) distance = manhattanDistance;
-        else if (distance == figue.MAX_DISTANCE) distance = maxDistance;
+        if (distance === figue.EUCLIDIAN_DISTANCE) distance = euclidianDistance;
+        else if (distance === figue.MANHATTAN_DISTANCE) distance = manhattanDistance;
+        else if (distance === figue.MAX_DISTANCE) distance = maxDistance;
         // Initialize distance matrix and vector of closest clusters
         for (i = 0; i < N; i++) {
             dMin[i] = 0;
             for (j = 0; j < N; j++) {
-                if (i == j) distMatrix[i][j] = Infinity;
+                if (i === j) distMatrix[i][j] = Infinity;
                 else distMatrix[i][j] = distance(vectors[i], vectors[j]);
                 if (distMatrix[i][dMin[i]] > distMatrix[i][j]) dMin[i] = j;
             }
@@ -193,17 +193,17 @@ var figue = function() {
             // create node to store cluster info 
             c1Cluster = clusters[c1][0];
             c2Cluster = clusters[c2][0];
-            newCentroid = calculateCentroid(c1Cluster.size, c1Cluster.centroid, c2Cluster.size, c2Cluster.centroid);
-            newCluster = new Node(-1, c1Cluster, c2Cluster, distMatrix[c1][c2], newCentroid);
+            var newCentroid = calculateCentroid(c1Cluster.size, c1Cluster.centroid, c2Cluster.size, c2Cluster.centroid);
+            var newCluster = new Node(-1, c1Cluster, c2Cluster, distMatrix[c1][c2], newCentroid);
             clusters[c1].splice(0, 0, newCluster);
             cSize[c1] += cSize[c2];
             // overwrite row c1 with respect to the linkage type
             for (j = 0; j < N; j++) {
-                if (linkage == figue.SINGLE_LINKAGE) {
+                if (linkage === figue.SINGLE_LINKAGE) {
                     if (distMatrix[c1][j] > distMatrix[c2][j]) distMatrix[j][c1] = distMatrix[c1][j] = distMatrix[c2][j];
-                } else if (linkage == figue.COMPLETE_LINKAGE) {
+                } else if (linkage === figue.COMPLETE_LINKAGE) {
                     if (distMatrix[c1][j] < distMatrix[c2][j]) distMatrix[j][c1] = distMatrix[c1][j] = distMatrix[c2][j];
-                } else if (linkage == figue.AVERAGE_LINKAGE) {
+                } else if (linkage === figue.AVERAGE_LINKAGE) {
                     var avg = (cSize[c1] * distMatrix[c1][j] + cSize[c2] * distMatrix[c2][j]) / (cSize[c1] + cSize[j])
                     distMatrix[j][c1] = distMatrix[c1][j] = avg;
                 }
@@ -213,7 +213,7 @@ var figue = function() {
             for (i = 0; i < N; i++) distMatrix[i][c2] = distMatrix[c2][i] = Infinity;
             // update dmin and replace ones that previous pointed to c2 to point to c1
             for (j = 0; j < N; j++) {
-                if (dMin[j] == c2) dMin[j] = c1;
+                if (dMin[j] === c2) dMin[j] = c1;
                 if (distMatrix[c1][j] < distMatrix[c1][dMin[c1]]) dMin[c1] = j;
             }
             // keep track of the last added cluster
@@ -234,7 +234,7 @@ var figue = function() {
         var selected = 0;
         var i, vector, select;
         while (selected < k) {
-            if (tested == n) return null;
+            if (tested === n) return null;
             var random_index = Math.floor(Math.random() * (n));
             if (random_index in tested_indices) continue;
             tested_indices[random_index] = 1;
@@ -267,7 +267,7 @@ var figue = function() {
         var nb_iters = 0;
         var centroids = null;
         var t = getRandomVectors(k, vectors);
-        if (t == null) return null;
+        if (t === null) return null;
         else centroids = t.vectors;
         while (repeat) {
             // assignment step
@@ -277,7 +277,7 @@ var figue = function() {
                 var mindist = Number.MAX_VALUE;
                 var best;
                 for (var j = 0; j < k; j++) {
-                    dist = euclidianDistance(centroids[j], vector)
+                    var dist = euclidianDistance(centroids[j], vector)
                     if (dist < mindist) {
                         mindist = dist;
                         best = j;
@@ -290,8 +290,8 @@ var figue = function() {
             var newCentroids = new Array(k);
             for (var j = 0; j < k; j++) newCentroids[j] = null;
             for (var i = 0; i < n; i++) {
-                cluster = assignments[i];
-                if (newCentroids[cluster] == null) newCentroids[cluster] = vectors[i];
+                var cluster = assignments[i];
+                if (newCentroids[cluster] === null) newCentroids[cluster] = vectors[i];
                 else newCentroids[cluster] = addVectors(newCentroids[cluster], vectors[i]);
             }
             for (var j = 0; j < k; j++) {
@@ -326,7 +326,7 @@ var figue = function() {
             // initialize or update centroids
             if (centroids == null) {
                 tmp = getRandomVectors(k, vectors);
-                if (tmp == null) return null;
+                if (tmp === null) return null;
                 else centroids = tmp.vectors;
             } else {
                 for (j = 0; j < k; j++) {
@@ -335,7 +335,7 @@ var figue = function() {
                     for (i = 0; i < membershipMatrix.rows; i++) {
                         norm += Math.pow(membershipMatrix.mtx[i][j], fuzziness);
                         tmp = multiplyVectorByValue(Math.pow(membershipMatrix.mtx[i][j], fuzziness), vectors[i]);
-                        if (i == 0) centroids[j] = tmp;
+                        if (i === 0) centroids[j] = tmp;
                         else centroids[j] = addVectors(centroids[j], tmp);
                     }
                     if (norm > 0) centroids[j] = multiplyVectorByValue(1 / norm, centroids[j]);
@@ -343,12 +343,12 @@ var figue = function() {
             }
             //alert(centroids);
             // update the degree of membership of each vector
-            previousMembershipMatrix = membershipMatrix.copy();
+            var previousMembershipMatrix = membershipMatrix.copy();
             for (i = 0; i < membershipMatrix.rows; i++) {
                 for (j = 0; j < k; j++) {
                     membershipMatrix.mtx[i][j] = 0;
                     for (l = 0; l < k; l++) {
-                        if (euclidianDistance(vectors[i], centroids[l]) == 0) tmp = 0;
+                        if (euclidianDistance(vectors[i], centroids[l]) === 0) tmp = 0;
                         else tmp = euclidianDistance(vectors[i], centroids[j]) / euclidianDistance(vectors[i], centroids[l]);
                         tmp = Math.pow(tmp, 2 / (fuzziness - 1));
                         membershipMatrix.mtx[i][j] += tmp;
@@ -359,7 +359,7 @@ var figue = function() {
             //alert(membershipMatrix) ;
             // check convergence
             max = -1;
-            diff;
+            var diff;
             for (i = 0; i < membershipMatrix.rows; i++)
                 for (j = 0; j < membershipMatrix.cols; j++) {
                     diff = Math.abs(membershipMatrix.mtx[i][j] - previousMembershipMatrix.mtx[i][j]);
@@ -393,7 +393,7 @@ var figue = function() {
         this.right = right;
         this.dist = dist;
         this.centroid = centroid;
-        if (left == null && right == null) {
+        if (left === null && right === null) {
             this.size = 1;
             this.depth = 0;
         } else {
@@ -430,11 +430,11 @@ figue.Matrix.prototype.copy = function() {
     return duplicate;
 }
 figue.Node.prototype.isLeaf = function() {
-    if ((this.left == null) && (this.right == null)) return true;
+    if ((this.left === null) && (this.right === null)) return true;
     else return false;
 }
 figue.Node.prototype.buildDendogram = function(sep, balanced, withLabel, withCentroid, withDistance) {
-    lines = figue.generateDendogram(this, sep, balanced, withLabel, withCentroid, withDistance);
+    var lines = figue.generateDendogram(this, sep, balanced, withLabel, withCentroid, withDistance);
     return lines.join("\n");
 }
 Array.prototype.compare = function(testArr) {
