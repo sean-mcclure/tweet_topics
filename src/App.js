@@ -22,6 +22,7 @@ function App() {
             <div>
                 <button onClick={(event) => {pipeline()}}>RUN</button>
             </div>
+                <div className="hold_results"></div>
         </div>
         </>
     )
