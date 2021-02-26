@@ -116,12 +116,20 @@ export const utility = {
             var clean_tweet = utility.clean_tweet(tweet);
             inner["cleaned_tweet"] = clean_tweet;
             inner["synonyms"] = [];
+            var keep_words = [];
             clean_tweet.split(" ").forEach(function(word) {
+                keep_words.push(word)
                 var syn_obj = utility.find_synonyms(word)
                 if(Object.keys(syn_obj).length !== 0) {
                     inner["synonyms"].push(syn_obj)
                 }
             })
+            inner["synonym_vector"] = [];
+            var all_syms = [];
+            inner["synonyms"].forEach(function(obj, i) {
+                all_syms.push(obj.synonyms)
+            })
+            inner["synonym_vector"].push(all_syms.join(",") + keep_words.join(","))
         res.push(inner)
     })
         return(res)
