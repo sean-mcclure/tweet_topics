@@ -1,7 +1,8 @@
 import {common_words} from "./common_words";
 
 import {figue} from "./libs/figue.js";
-//import {thes} from "./data/thes.js";
+
+var thesaurus = require('./data/thes.json');
 
 export const utility = {
     pipeline: function() {
@@ -16,13 +17,20 @@ export const utility = {
         var tweets_clean_lower_clean_nonum_trimmed_less = utility.remove_blanks(tweets_clean_lower_clean_nonum_trimmed_deduped)
         var topics = utility.find_topics(tweets_clean_lower_clean_nonum_trimmed_less)
 
-        console.log(topics)
+
+
+
+       // console.log(topics)
+
+        /*
 
         var topics_counts = utility.count_occurences(topics)
         var topics_counts_sorted = utility.sort_object_by_value(topics_counts)
         var topics_counts_sorted_sliced = topics_counts_sorted.slice(0, 16)
         res["list_data"] = utility.list_tweets_by_topic(tweets, topics_counts_sorted_sliced) // pass off to listing
         res["plot_data"] = utility.prepare_for_plotly(topics_counts_sorted_sliced)
+
+        */
 
         var synms = utility.add_synonyms_to_tweets(tweets, tweets_clean_lower_clean_nonum_trimmed_less, topics)
         console.log(synms)
@@ -197,16 +205,14 @@ export const utility = {
         return(vocab)
     },
     find_synonyms : function(word) {
-        /*
+       // console.log(word)
         var res;
-        var use_thes = JSON.parse({thes});
-        use_thes.forEach(function(obj) {
-            if(obj.word === word) {
-                res = obj
+        thesaurus.forEach(function(obj) {
+            if(obj.word.toLowerCase() === word.toLowerCase()) {
+                res = obj.word
             }
         })
         return(res)
-        */
     },
     add_synonyms_to_tweets : function(original_tweets, cleaned_tweets, topics) {
         var res = []
@@ -221,8 +227,9 @@ export const utility = {
                     inner_syn.push(synonyms)
                 })
                 inner["synonyms"] = inner_syn
-            res.push(inner)
+            
         })
+        res.push(inner)
     })
         return(res)
     },

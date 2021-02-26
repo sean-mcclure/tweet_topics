@@ -6,9 +6,12 @@ import { utility } from "./utility";
 import Chart from "./Chart";
 import Listing from "./Listing";
 
-
-
 function App() {
+
+    const pipeline = (e) => {
+         utility.pipeline()
+    }
+    
     return(
         <>
         <div className="title">PASTE TWEETS</div>
@@ -16,11 +19,8 @@ function App() {
             <div className="item">
                 <textarea id="textarea"></textarea>
             </div>
-            <div className="item">
-                <Listing/>
-            </div>
-            <div className="item">
-                <Chart/>
+            <div>
+                <button onClick={(event) => {pipeline()}}>RUN</button>
             </div>
         </div>
         </>
