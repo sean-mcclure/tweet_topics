@@ -182,7 +182,9 @@ export const utility = {
     show_results : function(arr) {
         document.getElementsByClassName("hold_results")[0].innerHTML = "";
         arr.forEach(function(obj) {
-            document.getElementsByClassName("hold_results")[0].innerHTML += "<h3>" + obj.original_tweet + "</h3><br>"
+            var clean_tweet = utility.clean_tweet(obj.original_tweet);
+            var use_title = utility.find_longest_word(clean_tweet, 3);
+            document.getElementsByClassName("hold_results")[0].innerHTML += "<h3>Topic</h3><h4>" + use_title.join(", ") + "</h4><br>"
             obj.closest_tweets.forEach(function(closest_tweet) {
                 document.getElementsByClassName("hold_results")[0].innerHTML += "<div class='hold_closest_tweet'>" + closest_tweet + "</div><br>"
             })
