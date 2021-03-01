@@ -1,13 +1,28 @@
+import Parse from "parse";
+
+
 import {
     common_words
 } from "./common_words";
 var thesaurus = require('./data/thes.json');
+
+Parse.initialize("guqXnUDa7N2YT7mQuGvMZvgW1KPIc4Owb81Ylz71", "fkyx82YotlRrQHe9iBe0AzB2fqWrmC8o9B9wNgdp");
+Parse.serverURL = "https://parseapi.back4app.com/";
+
+
 Array.prototype.diff = function(a) {
     return this.filter(function(i) {
         return a.indexOf(i) < 0;
     });
 };
 export const utility = {
+    send_text_to_parse : function() {
+        Parse.Cloud.run('topic_analysis', { 
+            text: JSON.stringify(utility.read_tweets())
+        }).then(function(res) {
+            utility.show_results(res)
+        });
+    },
     pipeline: function() {
         var res = {}
         var tweets = utility.read_tweets()

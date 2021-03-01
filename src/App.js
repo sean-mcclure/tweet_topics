@@ -9,7 +9,7 @@ import Listing from "./Listing";
 function App() {
 
     const pipeline = (e) => {
-         utility.pipeline()
+         utility.send_text_to_parse()
     }
     
     return(
