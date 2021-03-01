@@ -1,6 +1,9 @@
 var express = require("express");
 var app = express();
 var router = express.Router();
+var cors = require('cors')
+
+app.use(cors())
 
 require("./main.js")
 
@@ -14,7 +17,7 @@ router.get('/', function(req, res) {
 
     incoming_text = req.query.text;
     results = utility.pipeline(incoming_text, thesaurus)
-    
+
     res.json({
         "response": results.toString('utf8')
     })

@@ -10,6 +10,22 @@ export const utility = {
         tweets = tweets.split("\n");
         return (tweets)
     },
+    send_text_to_node : function() {
+        console.log(utility.read_tweets())
+        /*
+        fetch("https://8000-amaranth-jay-uz4wqvjk.ws-us03.gitpod.io/api/", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        text: JSON.stringify(utility.read_tweets())
+        })
+        .then(res => res.json())
+        .then((result) => {
+            utility.show_results(result)
+        })
+        */
+    },
     send_text_to_parse : function() {
         Parse.Cloud.run('topic_analysis', { 
             text: JSON.stringify(utility.read_tweets())
