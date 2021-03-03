@@ -1,12 +1,9 @@
 import Parse from "parse";
-import {config} from "../scripts/config.js";
-
 Parse.initialize("guqXnUDa7N2YT7mQuGvMZvgW1KPIc4Owb81Ylz71", "fkyx82YotlRrQHe9iBe0AzB2fqWrmC8o9B9wNgdp");
 Parse.serverURL = "https://parseapi.back4app.com/";
 
 export const events = {
     read_tweets: function() {
-        var cleaned_tweets = []
         var tweets = document.getElementById("textarea").value;
         tweets = tweets.split("\n");
         return (tweets)
@@ -28,7 +25,8 @@ export const events = {
         return (str)
     },
     show_results: function(arr) {
-        document.getElementsByClassName("hold_results")[0].innerHTML = "";
+       // document.getElementsByClassName("hold_results")[0].innerHTML = "";
+        /*
         arr.forEach(function(obj) {
             var clean_tweet = events.clean_tweet(obj.original_tweet);
             var use_title = events.find_longest_word(clean_tweet, 3);
@@ -37,5 +35,7 @@ export const events = {
                 document.getElementsByClassName("hold_results")[0].innerHTML += "<div class='hold_closest_tweet'>" + closest_tweet + "</div><br>"
             })
         })
+        */
+       console.log(arr)
     }
 }
