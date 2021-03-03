@@ -221,12 +221,20 @@ var stemmer = (function(){
 })();
 
 export const utility = {
+        chunker : function() {
+            
+        },
         pipeline: function(incoming_text) {
             var res = {}
            // var tweets = utility.read_tweets(incoming_text)
+           if(incoming_text.length > 200) {
+              alert("large number of documents")
+              closest_tweets = null
+           } else {           
             var synms = utility.add_synonyms_to_tweets(incoming_text)
             var tweets_and_distances = utility.distance_between_all_vectors(synms)
             var closest_tweets = utility.find_closest_tweets(tweets_and_distances)
+           }
             return(closest_tweets)
         },
         read_tweets: function(incoming_text) {
