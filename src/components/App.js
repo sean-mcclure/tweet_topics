@@ -6,7 +6,7 @@ import { events } from "../scripts/events.js";
 function App() {
 
     const pipeline = (e) => {
-         events.send_text_to_parse()
+         events.process_text_locally()
     }
     
     return(
