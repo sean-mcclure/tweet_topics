@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import Plot from 'react-plotly.js';
 
-import {utility} from "./utility";
+import {utility} from "../scripts/utility.js";
 
 function Chart(props) {
 

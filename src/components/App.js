@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
-import "./App.css";
-import { utility } from "./utility";
-
-import Chart from "./Chart";
-import Listing from "./Listing";
+import "../styles/App.css";
+import { events } from "../scripts/events.js";
 
 function App() {
 
     const pipeline = (e) => {
-        utility.send_text_to_node()
-         //utility.send_text_to_parse()
+         events.send_text_to_parse()
     }
     
     return(

@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import Highlighter from "react-highlight-words";
 
-import "./Listing.css";
+import "../styles/Listing.css";
 
-import {utility} from "./utility";
+import {utility} from "../scripts/utility.js";
 
 function Listing() {
     
