@@ -227,9 +227,9 @@ export const utility = {
         pipeline: function(incoming_text) {
             var res = {}
            // var tweets = utility.read_tweets(incoming_text)
-           if(incoming_text.length > 200) {
+           if(incoming_text.length > 300) {
               alert("large number of documents")
-              closest_tweets = null
+              closest_tweets = []
            } else {           
             var synms = utility.add_synonyms_to_tweets(incoming_text)
             var tweets_and_distances = utility.distance_between_all_vectors(synms)
@@ -266,11 +266,22 @@ export const utility = {
             return (longest)
         },
         find_topics: function(arr) {
+            var res = [];
             var raw_topics = [];
             arr.forEach(function(str) {
-                raw_topics.push(utility.find_longest_word(str, 3));
+                var cleaned = utility.clean_tweet(str);
+                var top_3 = utility.find_longest_word(cleaned, 3);
+                var top_synonyms = [];
+                top_3.forEach(function(long_word) {
+                    top_synonyms.push(utility.find_synonyms(long_word).synonyms);
+                })
+                var inner = {};
+                inner["tweet"] = str;
+                inner["synonym"] = top_synonyms;
+                res.push(inner)
             })
-            return (raw_topics)
+            console.log(res)
+            return (res)
         },
         dedupe_tweet: function(tweet) {
             var res = []
@@ -326,6 +337,13 @@ export const utility = {
             str = utility.dedupe_tweet(str)
             return (str)
         },
+        delay_loop : function(fn, delay) {
+            return (name, i) => {
+                setTimeout(() => {
+                fn(name);
+                }, i * delay);
+            }
+        },
         add_synonyms_to_tweets: function(original_tweets) {
             var res = []
             original_tweets.forEach(function(tweet, i) {
@@ -372,6 +390,7 @@ export const utility = {
                         inner["other_tweets"].push(inner_b);
                     }
                 })
+                console.log("distances : " + i)
                 res.push(inner)
             })
             return (res)
@@ -379,12 +398,15 @@ export const utility = {
         find_closest_tweets: function(arr) {
             var res = []
             arr.forEach(function(obj) {
+                var all_tweets = []
                 var inner = {}
                 inner.original_tweet = obj.original_tweet
+                all_tweets.push(obj.original_tweet)
                 inner.closest_tweets = []
                 var other_tweet_distances = []
                 obj.other_tweets.forEach(function(obj_b) {
                     other_tweet_distances.push(obj_b.distance_to_original_tweet)
+                    all_tweets.push(obj_b.tweet)
                 })
                 var smallest_distance = Math.min.apply(Math, other_tweet_distances);
                 obj.other_tweets.forEach(function(obj_b) {
@@ -392,7 +414,8 @@ export const utility = {
                         inner.closest_tweets.push(obj_b.tweet)
                     }
                 })
-                inner.topic = utility.find_longest_word(utility.clean_tweet(obj.original_tweet), 3)
+                utility.find_topics(all_tweets);
+                //inner.topic = utility.find_longest_word(utility.clean_tweet(obj.original_tweet), 3)
                 res.push(inner)
             })
             return (res)
