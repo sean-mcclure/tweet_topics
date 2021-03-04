@@ -227,20 +227,24 @@ export const utility = {
         pipeline: function(incoming_text) {
             var res = {}
            // var tweets = utility.read_tweets(incoming_text)
-           if(incoming_text.length > 100) {
-              alert("large number of documents...processing in chunks")
-              var arr_of_arrs = utility.chunk_array(incoming_text, 100)
-              arr_of_arrs.forEach(function(this_incoming_text) {
-                console.log(this_incoming_text)
-                var synms = utility.add_synonyms_to_tweets(this_incoming_text)
-                var tweets_and_distances = utility.distance_between_all_vectors(synms)
-                var closest_tweets = utility.find_closest_tweets(tweets_and_distances)
+           if(incoming_text.length > 50) {
+              var temp_res = []
+              console.log("large number of documents...processing in chunks")
+              var arr_of_arrs = utility.chunk_array(incoming_text, 50)
+              arr_of_arrs.forEach(function(chunk_text, i) {
+                console.log("chunk : " + Number(i + 1).toString())
+                temp_res.push(utility.process_tweets(chunk_text))
+                res = temp_res.reduce(function(a, b){return a.concat(b)}, [])
               })
            } else {           
-                var synms = utility.add_synonyms_to_tweets(incoming_text)
-                var tweets_and_distances = utility.distance_between_all_vectors(synms)
-                var closest_tweets = utility.find_closest_tweets(tweets_and_distances)
+                var res = utility.process_tweets(incoming_text)
            }
+            return(res)
+        },
+        process_tweets : function(incoming_text) {
+            var synms = utility.add_synonyms_to_tweets(incoming_text)
+            var tweets_and_distances = utility.distance_between_all_vectors(synms)
+            var closest_tweets = utility.find_closest_tweets(tweets_and_distances)
             return(closest_tweets)
         },
         read_tweets: function(incoming_text) {
@@ -310,10 +314,6 @@ export const utility = {
             res["type"] = "bar"
             return (res)
         },
-        highlight_words: function(word) {
-            const page = document.body.innerHTML;
-            document.body.innerHTML = page.replace(new RegExp(word, "gi"), (match) => `<mark>${match}</mark>`);
-        },
         find_synonyms: function(word) {
             var res = {};
             utility.get_thesaurus().forEach(function(obj) {
@@ -364,6 +364,7 @@ export const utility = {
             var res = []
             original_tweets.forEach(function(tweet, i) {
                 var inner = {};
+                if(tweet !== "") {
                 inner["original_tweet"] = tweet;
                 var clean_tweet = utility.clean_tweet(tweet);
                 inner["cleaned_tweet"] = clean_tweet;
@@ -386,6 +387,7 @@ export const utility = {
                     inner["synonym_vector"].push(word)
                 })
                 res.push(inner)
+            }
             })
             return (res)
         },
@@ -394,6 +396,7 @@ export const utility = {
             var all_distances = []
             synms.forEach(function(obj, i) {
                 var inner = {}
+                if(obj.original_tweet !== "") {
                 inner["original_tweet"] = obj.original_tweet
                 inner["other_tweets"] = []
                 synms.forEach(function(obj_b, i) {
@@ -407,6 +410,7 @@ export const utility = {
                     }
                 })
                 res.push(inner)
+            }
             })
             return (res)
         },
@@ -435,7 +439,8 @@ export const utility = {
                     these_synonyms.push(obj.synonym.reduce(function(a, b){return a.concat(b)}, []))
                 })
                 var flattened_synonyms = these_synonyms.reduce(function(a, b){return a.concat(b)}, [])
-                inner.topic = flattened_synonyms.filter(function( element ) {return element !== undefined});
+                var all_topics = flattened_synonyms.filter(function( element ) {return element !== undefined});
+                inner.topic = utility.find_longest_word(all_topics.join(" "), 8)
                 res.push(inner)
             })
             return (res)

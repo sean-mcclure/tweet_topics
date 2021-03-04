@@ -27,7 +27,9 @@ export const events = {
         arr.forEach(function(obj) {
             document.getElementsByClassName("hold_results")[0].innerHTML += "<h3>Topic</h3><h4>" + obj.topic.join(", ") + "</h4><br>"
             obj.closest_tweets.forEach(function(closest_tweet) {
-                document.getElementsByClassName("hold_results")[0].innerHTML += "<div class='hold_closest_tweet'>" + closest_tweet + "</div><br>"
+                var searched = obj.topic[0]
+                let re = new RegExp(searched,"g"); 
+                document.getElementsByClassName("hold_results")[0].innerHTML += "<div class='hold_closest_tweet'>" + closest_tweet.replace(re, `<mark>${searched}</mark>`) + "</div><br>"
             })
         })
     }
