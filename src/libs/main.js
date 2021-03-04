@@ -280,8 +280,7 @@ export const utility = {
                 inner["synonym"] = top_synonyms;
                 res.push(inner)
             })
-            console.log(res)
-            return (res)
+            return (res);
         },
         dedupe_tweet: function(tweet) {
             var res = []
@@ -390,7 +389,6 @@ export const utility = {
                         inner["other_tweets"].push(inner_b);
                     }
                 })
-                console.log("distances : " + i)
                 res.push(inner)
             })
             return (res)
@@ -406,16 +404,21 @@ export const utility = {
                 var other_tweet_distances = []
                 obj.other_tweets.forEach(function(obj_b) {
                     other_tweet_distances.push(obj_b.distance_to_original_tweet)
-                    all_tweets.push(obj_b.tweet)
                 })
                 var smallest_distance = Math.min.apply(Math, other_tweet_distances);
                 obj.other_tweets.forEach(function(obj_b) {
                     if (obj_b.distance_to_original_tweet === smallest_distance) {
                         inner.closest_tweets.push(obj_b.tweet)
+                        all_tweets.push(obj_b.tweet)
                     }
                 })
-                utility.find_topics(all_tweets);
-                //inner.topic = utility.find_longest_word(utility.clean_tweet(obj.original_tweet), 3)
+                var topic_arr = utility.find_topics(all_tweets);
+                var these_synonyms = [];
+                topic_arr.forEach(function(obj) {
+                    these_synonyms.push(obj.synonym.reduce(function(a, b){return a.concat(b)}, []))
+                })
+                var flattened_synonyms = these_synonyms.reduce(function(a, b){return a.concat(b)}, [])
+                inner.topic = flattened_synonyms.filter(function( element ) {return element !== undefined});
                 res.push(inner)
             })
             return (res)
