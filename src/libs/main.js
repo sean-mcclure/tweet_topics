@@ -227,13 +227,19 @@ export const utility = {
         pipeline: function(incoming_text) {
             var res = {}
            // var tweets = utility.read_tweets(incoming_text)
-           if(incoming_text.length > 300) {
-              alert("large number of documents")
-              closest_tweets = []
+           if(incoming_text.length > 100) {
+              alert("large number of documents...processing in chunks")
+              var arr_of_arrs = utility.chunk_array(incoming_text, 100)
+              arr_of_arrs.forEach(function(this_incoming_text) {
+                console.log(this_incoming_text)
+                var synms = utility.add_synonyms_to_tweets(this_incoming_text)
+                var tweets_and_distances = utility.distance_between_all_vectors(synms)
+                var closest_tweets = utility.find_closest_tweets(tweets_and_distances)
+              })
            } else {           
-            var synms = utility.add_synonyms_to_tweets(incoming_text)
-            var tweets_and_distances = utility.distance_between_all_vectors(synms)
-            var closest_tweets = utility.find_closest_tweets(tweets_and_distances)
+                var synms = utility.add_synonyms_to_tweets(incoming_text)
+                var tweets_and_distances = utility.distance_between_all_vectors(synms)
+                var closest_tweets = utility.find_closest_tweets(tweets_and_distances)
            }
             return(closest_tweets)
         },
@@ -335,6 +341,17 @@ export const utility = {
             str = str.trim()
             str = utility.dedupe_tweet(str)
             return (str)
+        },
+        chunk_array : function(arr, chunk_size) {
+            var res = arr.reduce((resultArray, item, index) => { 
+                const chunkIndex = Math.floor(index/chunk_size)
+                if(!resultArray[chunkIndex]) {
+                    resultArray[chunkIndex] = []
+                }
+                resultArray[chunkIndex].push(item)
+            return resultArray
+            }, [])
+            return(res)
         },
         delay_loop : function(fn, delay) {
             return (name, i) => {
