@@ -1194,6 +1194,11 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@greenelab/hclust@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@greenelab/hclust/-/hclust-0.0.1.tgz#92c3750fea00b6ac712169ed49ddc5614aad7421"
+  integrity sha512-zVKQDcBHESkAg+hvRuTfjzaoqsDlxoJpM0z+x4FgcMood1XZjTCv8Zww0CZFX9g8eLXB7zzG1aas4cwb+2nnMg==
+
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.1.4.tgz"
@@ -3578,6 +3583,11 @@ cliui@^6.0.0:
     string-width "^4.2.0"
     strip-ansi "^6.0.0"
     wrap-ansi "^6.2.0"
+
+clusterfck@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/clusterfck/-/clusterfck-1.0.0.tgz#6402bd84f272be171a1daafd1d0fca245561fdc4"
+  integrity sha512-jExaOjYY8Zqw3mzhRAY2PEXCi7dnGr9h9PZn1L3PLKZKpxj9ForoSOuEKuvFwS86J/9uc9TsbPtCVH8OkOJpTg==
 
 co@^4.6.0:
   version "4.6.0"
@@ -8219,6 +8229,16 @@ klona@^2.0.4:
   resolved "https://registry.yarnpkg.com/klona/-/klona-2.0.4.tgz"
   integrity sha512-ZRbnvdg/NxqzC7L9Uyqzf4psi1OM4Cuc+sJAkQPjO6XkQIJTNbfK2Rsmbw8fx1p2mkZdp2FZYo2+LwXYY/uwIA==
 
+kmeansjs@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/kmeansjs/-/kmeansjs-0.0.3.tgz#080ca267ae5c9bbc8031456fabcb414f27256c3d"
+  integrity sha1-CAyiZ65cm7yAMUVvq8tBTyclbD0=
+
+lancaster-stemmer@^1.0.0:
+  version "1.0.5"
+  resolved "https://registry.npmjs.org/lancaster-stemmer/-/lancaster-stemmer-1.0.5.tgz"
+  integrity sha512-FRS5Q6jXQpJOYT7kMiCo+bFFutoTHUVlRqliMfpTEsUVR9Y++qxzEdfDvr0tSjeyhUUcQb1PGolxoGUoYmK7Gw==
+
 language-subtag-registry@~0.3.2:
   version "0.3.21"
   resolved "https://registry.yarnpkg.com/language-subtag-registry/-/language-subtag-registry-0.3.21.tgz"
@@ -12277,6 +12297,11 @@ stealthy-require@^1.1.1:
   resolved "https://registry.yarnpkg.com/stealthy-require/-/stealthy-require-1.1.1.tgz"
   integrity sha1-NbCYdbT/SfJqd35QmzCQoyJr8ks=
 
+stemmer@^1.0.0:
+  version "1.0.5"
+  resolved "https://registry.npmjs.org/stemmer/-/stemmer-1.0.5.tgz"
+  integrity sha512-SLq7annzSKRDStasOJJoftCSCzBCKmBmH38jC4fDtCunAqOzpTpIm9zmaHmwNJiZ8gLe9qpVdBVbEG2DC5dE2A==
+
 stream-browserify@^2.0.1:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/stream-browserify/-/stream-browserify-2.0.2.tgz"
@@ -12718,6 +12743,23 @@ text-cache@^4.2.2:
   dependencies:
     vectorize-text "^3.2.1"
 
+text-miner@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/text-miner/-/text-miner-1.3.0.tgz#bc817769473ad803e6596de01dc79706887ecf54"
+  integrity sha512-IOumtaKwArtCT7f3Z7/kqzGt9tOsnUAseEC2qV4ytMeOmGsGVa9di8gyiW3vxfsDa3eoDUnhFgCWF231h3dOqg==
+  dependencies:
+    lancaster-stemmer "^1.0.0"
+    stemmer "^1.0.0"
+    underscore "~1.9.1"
+    underscore.string "^3.3.5"
+    utils-define-read-only-property "^1.0.0"
+    validate.io-array-like "^1.0.1"
+    validate.io-boolean-primitive "^1.0.0"
+    validate.io-object "^1.0.4"
+    validate.io-object-array "^1.0.0"
+    validate.io-string-array "^1.0.0"
+    validate.io-string-primitive "^1.0.0"
+
 text-table@0.2.0, text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz"
@@ -13057,6 +13099,19 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
+underscore.string@^3.3.5:
+  version "3.3.5"
+  resolved "https://registry.npmjs.org/underscore.string/-/underscore.string-3.3.5.tgz"
+  integrity sha512-g+dpmgn+XBneLmXXo+sGlW5xQEt4ErkS3mgeN2GFbremYeMBSJKr9Wf2KJplQVaiPY/f7FN6atosWYNm9ovrYg==
+  dependencies:
+    sprintf-js "^1.0.3"
+    util-deprecate "^1.0.2"
+
+underscore@~1.9.1:
+  version "1.9.2"
+  resolved "https://registry.npmjs.org/underscore/-/underscore-1.9.2.tgz"
+  integrity sha512-D39qtimx0c1fI3ya1Lnhk3E9nONswSKhnffBI0gME9C99fYOkNi04xs8K6pePLhvl1frbDemkaBQ5ikWllR2HQ==
+
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/unicode-canonical-property-names-ecmascript/-/unicode-canonical-property-names-ecmascript-1.0.4.tgz"
@@ -13276,6 +13331,11 @@ utils-copy@^1.0.0, utils-copy@^1.1.0:
     validate.io-buffer "^1.0.1"
     validate.io-nonnegative-integer "^1.0.0"
 
+utils-define-read-only-property@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/utils-define-read-only-property/-/utils-define-read-only-property-1.0.0.tgz"
+  integrity sha1-Ll21WssKnwb1yButn0JtDiT44W8=
+
 utils-indexof@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/utils-indexof/-/utils-indexof-1.0.0.tgz"
@@ -13337,10 +13397,15 @@ validate.io-array-like@^1.0.1:
     const-max-uint32 "^1.0.2"
     validate.io-integer-primitive "^1.0.0"
 
-validate.io-array@^1.0.3, validate.io-array@^1.0.6:
+validate.io-array@^1.0.1, validate.io-array@^1.0.3, validate.io-array@^1.0.6:
   version "1.0.6"
   resolved "https://registry.npmjs.org/validate.io-array/-/validate.io-array-1.0.6.tgz"
   integrity sha1-W1osr9j4uFq7L4hroVPy2Tond00=
+
+validate.io-boolean-primitive@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/validate.io-boolean-primitive/-/validate.io-boolean-primitive-1.0.0.tgz"
+  integrity sha1-uxTJy4aDw8nz0TKalad2jj7inrU=
 
 validate.io-buffer@^1.0.1:
   version "1.0.2"
@@ -13388,6 +13453,21 @@ validate.io-number@^1.0.3:
   resolved "https://registry.npmjs.org/validate.io-number/-/validate.io-number-1.0.3.tgz"
   integrity sha1-9j/+2iSL8opnqNSODjtGGhZluvg=
 
+validate.io-object-array@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/validate.io-object-array/-/validate.io-object-array-1.0.0.tgz"
+  integrity sha1-mXr4SFERGvAf9drdwB+UyH8OUUM=
+  dependencies:
+    validate.io-array "^1.0.3"
+    validate.io-object "^1.0.3"
+
+validate.io-object@^1.0.3, validate.io-object@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.npmjs.org/validate.io-object/-/validate.io-object-1.0.4.tgz"
+  integrity sha1-3KAezu45DhENvCr4Q8gfe/M6Qas=
+  dependencies:
+    validate.io-array "^1.0.1"
+
 validate.io-positive-integer@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/validate.io-positive-integer/-/validate.io-positive-integer-1.0.0.tgz"
@@ -13395,10 +13475,23 @@ validate.io-positive-integer@^1.0.0:
   dependencies:
     validate.io-integer "^1.0.5"
 
+validate.io-string-array@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/validate.io-string-array/-/validate.io-string-array-1.0.0.tgz"
+  integrity sha1-5g5IAWctVlnjvJmk0QRPrwWh36M=
+  dependencies:
+    validate.io-array "^1.0.3"
+    validate.io-string "^1.0.2"
+
 validate.io-string-primitive@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npmjs.org/validate.io-string-primitive/-/validate.io-string-primitive-1.0.1.tgz"
   integrity sha1-uBNbn7E3K94C/dU60dDM1t55j+4=
+
+validate.io-string@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.npmjs.org/validate.io-string/-/validate.io-string-1.0.2.tgz"
+  integrity sha1-ur86Uoso5LnoAX4ygfx2ABrm3C8=
 
 vary@^1, vary@~1.1.2:
   version "1.1.2"

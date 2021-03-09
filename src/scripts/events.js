@@ -13,7 +13,7 @@ export const events = {
     process_text_locally : function() {
         var res = utility.pipeline(events.read_tweets())
         console.log(res)
-        events.show_results(res)
+       // events.show_results(res)
     },
     send_text_to_parse : function() {
         Parse.Cloud.run('topic_analysis', { 

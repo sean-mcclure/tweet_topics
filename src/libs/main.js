@@ -1,3 +1,12 @@
+
+
+
+
+
+var tm = require('text-miner');
+
+var clusterData = require('hclust');
+
 Array.prototype.diff = function(a) {
 	return this.filter(function(i) {
 		return a.indexOf(i) < 0;
@@ -221,13 +230,10 @@ var stemmer = (function(){
 })();
 
 export const utility = {
-        chunker : function() {
-            
-        },
         pipeline: function(incoming_text) {
             var res = {}
            // var tweets = utility.read_tweets(incoming_text)
-           if(incoming_text.length > 50) {
+           if(incoming_text.length > 50000000000) {
               var temp_res = []
               console.log("large number of documents...processing in chunks")
               var arr_of_arrs = utility.chunk_array(incoming_text, 50)
@@ -242,10 +248,19 @@ export const utility = {
             return(res)
         },
         process_tweets : function(incoming_text) {
+            var my_corpus = new tm.Corpus(incoming_text);
+            var bobo = my_corpus.removeWords( tm.STOPWORDS.EN )
+            var terms = new tm.DocumentTermMatrix(bobo);
+            var original_docs = incoming_text;
+            var vectors = terms.data;
+            var kmeans_results = utility.kmeans(original_docs, vectors, 10)
+            return(kmeans_results)
+            /*
             var synms = utility.add_synonyms_to_tweets(incoming_text)
             var tweets_and_distances = utility.distance_between_all_vectors(synms)
             var closest_tweets = utility.find_closest_tweets(tweets_and_distances)
             return(closest_tweets)
+            */
         },
         read_tweets: function(incoming_text) {
             var tweets = JSON.parse(incoming_text);
@@ -444,9 +459,16 @@ export const utility = {
                 res.push(inner)
             })
             return (res)
-        }
-    }
+        },
+        kmeans: function(original_docs, vectors, k) {
+            //
 
+            clusterData(vectors)
+
+
+}
+
+        }
 /*
 Parse.Cloud.define("topic_analysis", async (req) => { 
     incoming_text = req.params.text;
