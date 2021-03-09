@@ -1,11 +1,5 @@
-
-
-
-
-
-var tm = require('text-miner');
-
-var clusterData = require('hclust');
+var tm = require("text-miner");
+const skmeans = require("skmeans");
 
 Array.prototype.diff = function(a) {
 	return this.filter(function(i) {
@@ -231,36 +225,35 @@ var stemmer = (function(){
 
 export const utility = {
         pipeline: function(incoming_text) {
-            var res = {}
-           // var tweets = utility.read_tweets(incoming_text)
-           if(incoming_text.length > 50000000000) {
-              var temp_res = []
-              console.log("large number of documents...processing in chunks")
-              var arr_of_arrs = utility.chunk_array(incoming_text, 50)
-              arr_of_arrs.forEach(function(chunk_text, i) {
-                console.log("chunk : " + Number(i + 1).toString())
-                temp_res.push(utility.process_tweets(chunk_text))
-                res = temp_res.reduce(function(a, b){return a.concat(b)}, [])
-              })
-           } else {           
-                var res = utility.process_tweets(incoming_text)
-           }
+            var mapped = []      
+            var kmeans_results = utility.process_tweets(incoming_text);
+            var cluster_numbers = kmeans_results.idxs;
+            incoming_text.forEach(function(tweet, i) {
+                var inner = {}
+                inner["tweet"] =  tweet;
+                inner["cluster_number"] = cluster_numbers[i]
+                mapped.push(inner)
+            })
+            var res = utility.group_tweets_by_cluster(mapped)
             return(res)
+        },
+        group_tweets_by_cluster : function(mapped) {
+            var groupBy = function(xs, key) {
+            return xs.reduce(function(rv, x) {
+                (rv[x[key]] = rv[x[key]] || []).push(x);
+                return rv;
+            }, {});
+            };
+            return(groupBy(mapped, "cluster_number"));
         },
         process_tweets : function(incoming_text) {
             var my_corpus = new tm.Corpus(incoming_text);
-            var bobo = my_corpus.removeWords( tm.STOPWORDS.EN )
+            var bobo = my_corpus.removeWords(tm.STOPWORDS.EN)
             var terms = new tm.DocumentTermMatrix(bobo);
             var original_docs = incoming_text;
             var vectors = terms.data;
-            var kmeans_results = utility.kmeans(original_docs, vectors, 10)
+            var kmeans_results = utility.kmeans(original_docs, vectors, 30)
             return(kmeans_results)
-            /*
-            var synms = utility.add_synonyms_to_tweets(incoming_text)
-            var tweets_and_distances = utility.distance_between_all_vectors(synms)
-            var closest_tweets = utility.find_closest_tweets(tweets_and_distances)
-            return(closest_tweets)
-            */
         },
         read_tweets: function(incoming_text) {
             var tweets = JSON.parse(incoming_text);
@@ -461,11 +454,10 @@ export const utility = {
             return (res)
         },
         kmeans: function(original_docs, vectors, k) {
-            //
 
-            clusterData(vectors)
-
-
+            var data = vectors;
+var res = skmeans(data,10);
+return(res)
 }
 
         }

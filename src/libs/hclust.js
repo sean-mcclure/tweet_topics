@@ -26,13 +26,6 @@ const updateProgress = (stepNumber, stepProgress, onProgress) => {
   // if onProgress is defined and is a function, call onProgress
   if (typeof onProgress === 'function')
     onProgress(progress);
-
-  // if this script is being run as a web worker, call postMessage
-  if (
-    typeof WorkerGlobalScope !== 'undefined' &&
-    self instanceof WorkerGlobalScope
-  )
-    postMessage(progress);
 };
 
 // default onProgress function. console logs progress
